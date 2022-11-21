@@ -12,6 +12,7 @@ library(sjmisc)
 library(car)
 library(sjlabelled)
 library(splitstackshape)
+library(tidyr)
 
 
 # Base de datos de caracterización
@@ -502,4 +503,19 @@ proc_encuesta$educ_madre <- set_labels(proc_encuesta$educ_madre,
 
 frq(proc_encuesta$educ_madre)
 
+#---- 4. CASOS PERDIDOS ----
 
+# Se eliminarán los casos que no tienen un identificador de sesión ('session')
+
+proc_encuesta <- proc_encuesta[-which(proc_encuesta$session == ""), ]
+
+#---- 5. GENERACIÓN DE BASE DE DATOS PROCESADA -----
+
+# Revisión
+
+proc_encuesta <-as.data.frame(proc_encuesta)
+stargazer(proc_encuesta, type="text")
+
+# Guardar
+
+save(proc_encuesta, file = "proc/encuesta_cuidados.RData")
