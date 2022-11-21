@@ -71,4 +71,87 @@ proc_encuesta$si_no_cuidado <- set_labels(proc_encuesta$si_no_cuidado,
                                                      'Sí'=1)) # Etiquetado categorías de respuesta
 frq(proc_encuesta$si_no_cuidado) # Revisión final
 
+#---- 3.1 cuidado_tiempo----
+
+frq(proc_encuesta$cuidado_tiempo)
+
+get_label(proc_encuesta$cuidado_tiempo)
+
+proc_encuesta$cuidado_tiempo <- set_label(x =proc_encuesta$cuidado_tiempo, label = 'Horas al día trabajo de cuidados')
+
+proc_encuesta$cuidado_tiempo <- set_labels(proc_encuesta$cuidado_tiempo, 
+                                           labels= c('Menos de 1 hr.'=1,
+                                                     '1-3 hrs.'=2,
+                                                     '3-5 hrs.'=3))
+frq(proc_encuesta$cuidado_tiempo)
+
+
+#---- 3.2 cuidado_1 ----
+
+frq(proc_encuesta$cuidado_1)
+
+proc_encuesta <- rename(proc_encuesta, "cuidado_comer" = cuidado_1)
+
+proc_encuesta$cuidado_comer <- set_label(x = proc_encuesta$cuidado_comer,label = "Frecuencia dar de comer o amamantar")
+
+proc_encuesta$cuidado_comer <- set_labels(proc_encuesta$cuidado_comer,
+                                          labels= c('Nunca' = 1,
+                                                    'Raramente' = 2,
+                                                    'Ocasionalemente' = 3,
+                                                    'Frecuentemente' = 4, 
+                                                    'Muy frecuentemente' = 5))
+frq(proc_encuesta$cuidado_comer)
+
+#----3.3 cuidado_2 ----
+
+frq(proc_encuesta$cuidado_2)
+
+proc_encuesta <- rename(proc_encuesta, "cuidado_acostar" = cuidado_2)
+
+proc_encuesta$cuidado_acostar <- set_label(x = proc_encuesta$cuidado_acostar,label = "Frecuencia acostar")
+
+proc_encuesta$cuidado_acostar <- set_labels(proc_encuesta$cuidado_acostar,
+                                          labels= c('Nunca' = 1,
+                                                    'Raramente' = 2,
+                                                    'Ocasionalemente' = 3,
+                                                    'Frecuentemente' = 4, 
+                                                    'Muy frecuentemente' = 5))
+frq(proc_encuesta$cuidado_acostar)
+
+#---- 3.4 cuidado_3 ----
+
+frq(proc_encuesta$cuidado_3)
+
+proc_encuesta <- rename(proc_encuesta, "cuidado_mudar" = cuidado_3)
+
+proc_encuesta$cuidado_mudar <- set_label(x = proc_encuesta$cuidado_mudar,label = "Frecuencia mudar o llevar al baño")
+
+proc_encuesta$cuidado_mudar <- set_labels(proc_encuesta$cuidado_mudar,
+                                            labels= c('Nunca' = 1,
+                                                      'Raramente' = 2,
+                                                      'Ocasionalemente' = 3,
+                                                      'Frecuentemente' = 4, 
+                                                      'Muy frecuentemente' = 5))
+frq(proc_encuesta$cuidado_mudar)
+
+#---- 3.5 cuidado_4 ----
+
+frq(proc_encuesta$cuidado_3)
+
+proc_encuesta <- rename(proc_encuesta, "cuidado_mudar" = cuidado_3)
+
+proc_encuesta$cuidado_mudar <- set_label(x = proc_encuesta$cuidado_mudar,label = "Frecuencia mudar o llevar al baño")
+
+proc_encuesta$cuidado_mudar <- set_labels(proc_encuesta$cuidado_mudar,
+                                          labels= c('Nunca' = 1,
+                                                    'Raramente' = 2,
+                                                    'Ocasionalemente' = 3,
+                                                    'Frecuentemente' = 4, 
+                                                    'Muy frecuentemente' = 5))
+frq(proc_encuesta$cuidado_mudar)
+
+
+
+
+
 
