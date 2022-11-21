@@ -11,7 +11,6 @@ library(stargazer)
 library(sjmisc)
 library(car)
 library(sjlabelled)
-library(tidyr)
 library(splitstackshape)
 
 
@@ -330,8 +329,177 @@ proc_encuesta$cuidado_multiple_3 <- set_labels(proc_encuesta$cuidado_multiple_3,
 
 frq(proc_encuesta$cuidado_multiple_3) 
 
+#---- 3.17 satisfaccion_vida ----
 
+frq(proc_encuesta$satisfaccion_vida)
 
+proc_encuesta$satisfaccion_vida <- set_label(x = proc_encuesta$satisfaccion_vida, 
+                                             label = "Satisfacción con la vida (1 a 10)")
 
+proc_encuesta$satisfaccion_vida <- set_labels(proc_encuesta$satisfaccion_vida,
+                                              labels = c('Extremadamente insatisfecho' = 1,
+                                                         'Extremadamente satisfecho' = 10))
+
+frq(proc_encuesta$satisfaccion_vida)
+
+#---- 3.18 familia_1 ----
+
+frq(proc_encuesta$familia_1)
+
+proc_encuesta <- rename(proc_encuesta, "miembros_hogar" = familia_1)
+
+proc_encuesta$miembros_hogar <- set_label(x = proc_encuesta$miembros_hogar, 
+                                             label = "Número de miembros en el hogar")
+
+frq(proc_encuesta$miembros_hogar)
+
+#---- 3.19 familia_2 ----
+
+frq(proc_encuesta$familia_2)
+
+proc_encuesta <- rename(proc_encuesta, "miembros_cuidado" = familia_2)
+
+proc_encuesta$miembros_cuidado <- car::recode(proc_encuesta$miembros_cuidado, "c(1) = 1; c(2) = 0" )
+
+proc_encuesta$miembros_cuidado <- set_labels(proc_encuesta$miembros_cuidado,
+                                          labels = c('No'=0,
+                                                     'Sí'=1))
+
+proc_encuesta$miembros_cuidado <- set_label(x = proc_encuesta$miembros_cuidado, 
+                                          label = "Miembro del hogar requiere cuidados")
+
+frq(proc_encuesta$miembros_cuidado)
+
+#----3.20 familia_3 ----
+
+frq(proc_encuesta$familia_3)
+
+proc_encuesta <- rename(proc_encuesta, "hijos" = familia_3)
+
+proc_encuesta$hijos <- car::recode(proc_encuesta$hijos, "c(1) = 1; c(2) = 0" )
+
+proc_encuesta$hijos <- set_labels(proc_encuesta$hijos,
+                                             labels = c('No'=0,
+                                                        'Sí'=1))
+
+proc_encuesta$hijos <- set_label(x = proc_encuesta$hijos, 
+                                            label = "Tiene hijos")
+
+frq(proc_encuesta$hijos)
+
+#---- 3.21 familia_3b ----
+
+frq(proc_encuesta$familia_3b)
+
+proc_encuesta <- rename(proc_encuesta, "cantidad_hijos" = familia_3b)
+
+proc_encuesta$cantidad_hijos <- set_label(x = proc_encuesta$cantidad_hijos, 
+                                 label = "Número de hijos")
+
+frq(proc_encuesta$cantidad_hijos)
+
+#---- 3.22 familia_4 ----
+
+frq(proc_encuesta$familia_4)
+
+proc_encuesta <- rename(proc_encuesta, "vive_padres" = familia_4)
+
+proc_encuesta$vive_padres <- car::recode(proc_encuesta$vive_padres, "c(1) = 1; c(2) = 0" )
+
+proc_encuesta$vive_padres <- set_labels(proc_encuesta$vive_padres,
+                                  labels = c('No'=0,
+                                             'Sí'=1))
+
+proc_encuesta$vive_padres <- set_label(x = proc_encuesta$vive_padres, 
+                                          label = "Vive con sus padres")
+
+frq(proc_encuesta$vive_padres)
+
+#---- 3.23 e_civil ----
+
+frq(proc_encuesta$e_civil)
+
+proc_encuesta$e_civil <- set_label(x = proc_encuesta$e_civil, 
+                                       label = "Estado civil")
+
+proc_encuesta$e_civil <- set_labels(proc_encuesta$e_civil,
+                                        labels = c('Soltero'=1,
+                                                   'Casado'=2,
+                                                   'Otro' =6))
+
+frq(proc_encuesta$e_civil)
+
+#---- 3.24 edad ----
+
+frq(proc_encuesta$edad)
+
+proc_encuesta$edad <- na_if(proc_encuesta$edad, 4)
+proc_encuesta$edad <- na_if(proc_encuesta$edad, 99)
+
+proc_encuesta$edad <- set_label(x = proc_encuesta$edad, 
+                                   label = "Edad")
+
+frq(proc_encuesta$edad)
+
+#----3.25 carrera ----
+
+frq(proc_encuesta$carrera)
+
+proc_encuesta$carrera <- set_label(x = proc_encuesta$carrera, 
+                                label = "Carrera")
+
+proc_encuesta$carrera <- set_labels(proc_encuesta$carrera,
+                                    labels = c('Antropologia'=1,
+                                               'Educacion Parvularia'=2,
+                                               'Psicologia' =3,
+                                               'Sociologia'= 4,
+                                               'Trabajo Social' = 5))
+
+frq(proc_encuesta$carrera)
+
+#---- 3.26 anho_curs ----
+
+frq(proc_encuesta$anho_curs)
+
+proc_encuesta <- rename(proc_encuesta, "ano_ingreso" = anho_curs)
+
+proc_encuesta$ano_ingreso <- na_if(proc_encuesta$ano_ingreso, 3)
+
+proc_encuesta$ano_ingreso <- set_label(x = proc_encuesta$ano_ingreso, 
+                                   label = "Año ingreso carrera")
+
+frq(proc_encuesta$ano_ingreso)
+
+#---- 3.27 educ_padre ----
+
+frq(proc_encuesta$educ_padre)
+
+proc_encuesta$educ_padre <- set_label(x = proc_encuesta$educ_padre, 
+                                      label = "Nivel educacional padre")
+
+proc_encuesta$educ_padre <- set_labels(proc_encuesta$educ_padre,
+                                    labels = c('Ed. Basica'=1,
+                                               'Ed. Media'=2,
+                                               'Ed. Tecnica' =3,
+                                               'Ed. Universitaria'= 4,
+                                               'Postgrado' = 5))
+
+frq(proc_encuesta$educ_padre)
+
+#---- 3.28 educ_madre ----
+
+frq(proc_encuesta$educ_madre)
+
+proc_encuesta$educ_madre <- set_label(x = proc_encuesta$educ_madre, 
+                                      label = "Nivel educacional madre")
+
+proc_encuesta$educ_madre <- set_labels(proc_encuesta$educ_madre,
+                                       labels = c('Ed. Basica'=1,
+                                                  'Ed. Media'=2,
+                                                  'Ed. Tecnica' =3,
+                                                  'Ed. Universitaria'= 4,
+                                                  'Postgrado' = 5))
+
+frq(proc_encuesta$educ_madre)
 
 
