@@ -8,6 +8,7 @@ options(scipen=999)
 
 library(dplyr)
 library(stargazer)
+library(sjmisc)
 
 # Base de datos de caracterización
 
@@ -21,7 +22,7 @@ cuidados <- read.csv("input/grupo2.csv")
 
 stargazer(cuidados, type="text")
 
-#----2. SELECCIÓN DE VARIABLES ----
+#----2. SELECCIÓN DE VARIABLES Y UNION DE BASES DE DATOS  ----
 
 # Comprobar nombres de las variables en cada base de datos.
 
@@ -42,6 +43,20 @@ proc_carac <- carac %>% select(session, satisfaccion_vida, familia_1, familia_2,
 proc_cuidados <- cuidados %>% select(session, pregunta1, cuidado_tiempo, cuidado_1, cuidado_2, cuidado_3, cuidado_4, cuidado_5, 
                                      cuidado_6, cuidado_7, cuidado_8, cuidado_9, cuidado_10, cuidado_11, cuidado_12, cuidado_multiple)
 
+# Unión de ambas bases
+
+proc_encuesta <- merge(proc_cuidados, proc_carac, by='session')
+
+
+#----3. PROCESAMIENTO DE VARIABLES----
+#---- 3.1 pregunta1 ----
+
+frq(proc_encuesta$pregunta1) # Revisar la variable
+
+proc_elsoc$c18_09 <- recode(proc_elsoc$c18_09, "c(-888,-999)=NA")
+proc_elsoc$c18_10 <- recode(proc_elsoc$c18_10, "c(-888,-999)=NA")
+
+proc_encuesta$pregunta1 <- na_if(proc_encuesta$pregunta1, 3) # El valor 3 corresponde a No sabe/No responde, se agrega a las NA
 
 
 
