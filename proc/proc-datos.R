@@ -9,6 +9,8 @@ options(scipen=999)
 library(dplyr)
 library(stargazer)
 library(sjmisc)
+library(car)
+library(sjlabelled)
 
 # Base de datos de caracterización
 
@@ -53,13 +55,20 @@ proc_encuesta <- merge(proc_cuidados, proc_carac, by='session')
 
 frq(proc_encuesta$pregunta1) # Revisar la variable
 
-proc_elsoc$c18_09 <- recode(proc_elsoc$c18_09, "c(-888,-999)=NA")
-proc_elsoc$c18_10 <- recode(proc_elsoc$c18_10, "c(-888,-999)=NA")
-
 proc_encuesta$pregunta1 <- na_if(proc_encuesta$pregunta1, 3) # El valor 3 corresponde a No sabe/No responde, se agrega a las NA
 
+proc_encuesta$pregunta1 <- car::recode(proc_encuesta$pregunta1, "c(1) = 0; c(2) = 1" ) # Se asigna el valor 0 a si no hizo trabajo de cuidado, 1 sí hizo.
+
+proc_encuesta <- rename(proc_encuesta, "si_no_cuidado"= pregunta1) #Cambiar nombre a uno más intuitivo
+
+get_label(proc_encuesta$si_no_cuidado) # La variable no tiene etiqueta, se le pondrá una.
+
+proc_encuesta$si_no_cuidado <- set_label(x = proc_encuesta$si_no_cuidado, label = 'Tareas de cuidado última semana')
 
 
-
+proc_encuesta$si_no_cuidado <- set_labels(proc_encuesta$si_no_cuidado,
+                                          labels = c('No'=0,
+                                                     'Sí'=1)) # Etiquetado categorías de respuesta
+frq(proc_encuesta$si_no_cuidado) # Revisión final
 
 
