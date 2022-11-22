@@ -27,13 +27,19 @@ cuidados <- read.csv("input/grupo2.csv")
 
 stargazer(cuidados, type="text")
 
+# Base de datos sexualidad e identidad de género
+
+genero <- read.csv("input/grupo4.csv")
+
+stargazer(genero, type="text")
+
 #----2. SELECCIÓN DE VARIABLES Y UNION DE BASES DE DATOS  ----
 
 # Comprobar nombres de las variables en cada base de datos.
 
 names(carac)
 names(cuidados)
-
+names(genero)
 
 # Se deja fueran fuera las variables que no aportan al análisis o no son relevantes en esta oportunidad.
 
@@ -48,9 +54,16 @@ proc_carac <- carac %>% select(session, satisfaccion_vida, familia_1, familia_2,
 proc_cuidados <- cuidados %>% select(session, pregunta1, cuidado_tiempo, cuidado_1, cuidado_2, cuidado_3, cuidado_4, cuidado_5, 
                                      cuidado_6, cuidado_7, cuidado_8, cuidado_9, cuidado_10, cuidado_11, cuidado_12, cuidado_multiple)
 
+
+# Selección variables de interés genero
+
+proc_genero <- genero %>% select (session, id_genero, id_genero_otra, sex_asignado)
+
 # Unión de ambas bases
 
 proc_encuesta <- merge(proc_cuidados, proc_carac, by='session')
+
+proc_encuesta <- merge(proc_encuesta, proc_genero, by='session')
 
 
 #----3. PROCESAMIENTO DE VARIABLES----
@@ -502,6 +515,51 @@ proc_encuesta$educ_madre <- set_labels(proc_encuesta$educ_madre,
                                                   'Postgrado' = 5))
 
 frq(proc_encuesta$educ_madre)
+
+#---- 3.29 id_genero ----
+
+frq(proc_encuesta$id_genero)
+
+proc_encuesta$id_genero <- set_label(x = proc_encuesta$id_genero,
+                                     label= "Identidad de género")
+
+proc_encuesta$id_genero <- set_labels(proc_encuesta$id_genero,
+                                      labels = c('Mujer cis' = 1,
+                                                'Hombre cis' = 3,
+                                                'No binarie' = 5,
+                                                'Otra'= 6 ))
+
+frq(proc_encuesta$id_genero)
+
+
+#----3.30 id_genero_otra ----
+
+frq(proc_encuesta$id_genero_otra)
+
+proc_encuesta[proc_encuesta=="thank the formr monkey"] <- NA
+
+proc_encuesta$id_genero_otra <- set_label(x = proc_encuesta$id_genero_otra,
+                                     label= "Si respondió otra, ¿Cuál es su identidad de género?")
+
+frq(proc_encuesta$id_genero_otra)
+
+#---- 3.31 
+
+frq(proc_encuesta$sex_asignado)
+
+proc_encuesta$sex_asignado <- na_if(proc_encuesta$sex_asignado, 3)
+
+proc_encuesta$sex_asignado <- car::recode(proc_encuesta$sex_asignado, "c(1) = 0; c(2) = 1" )
+
+proc_encuesta$sex_asignado <- set_labels(proc_encuesta$sex_asignado,
+                                        labels = c('Hombre'=0,
+                                                   'Mujer'=1))
+
+proc_encuesta$sex_asignado <- set_label(x = proc_encuesta$sex_asignado,
+                                        label= 'Sexo asignado')
+
+frq(proc_encuesta$sex_asignado)
+
 
 #---- 4. CASOS PERDIDOS ----
 
