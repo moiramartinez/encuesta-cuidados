@@ -2,9 +2,9 @@
 # Moira Martínez, Catalina Navia y Ambar Santander
 # Curso Encuestas Sociales, Noviembre 2022
 
-#----1. LIBRERÍAS Y BASE DE DATOS ----
-
 options(scipen=999) 
+
+#----1. LIBRERÍAS Y BASE DE DATOS ----
 
 library(dplyr)
 library(stargazer)
@@ -13,7 +13,6 @@ library(car)
 library(sjlabelled)
 library(splitstackshape)
 library(tidyr)
-
 
 # Base de datos de caracterización
 
@@ -576,4 +575,4 @@ stargazer(proc_encuesta, type="text")
 
 # Guardar
 
-save(proc_encuesta, file = "proc/encuesta_cuidados.RData")
+save(proc_encuesta, "proc/encuesta_cuidados.RData")
