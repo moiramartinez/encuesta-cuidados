@@ -15,6 +15,9 @@ library(webshot)
 library(corrplot)
 library(psy)
 library(psych)
+library(ggmosaic)
+library(carData)
+library(tidyr)
 
 load('proc/encuesta_cuidados.RData') # El nombre de la base es proc_encuesta
 
@@ -193,14 +196,162 @@ webshot('output/tab3.html', 'output/tab3.png')
 
 # Puntajes factoriales
 
-fac_ml2 <- fa(r = cuidados_only, nfactors = 2, fm= "ml", scores="regression")
+fac_ml2 <- fa(r = select(proc_encuesta,cuidado_comer, cuidado_acostar, cuidado_mudar, cuidado_asear, cuidado_vestir, cuidado_aconsejar,
+                         cuidado_salud, cuidado_acompanar1, cuidado_acompanar2, cuidado_tareas, cuidado_jugar, cuidado_leer), nfactors = 2, fm= "ml", scores="regression")
 
-cuidados_only2=cuidados_only
+proc_encuesta <- cbind(proc_encuesta, fac_ml2$scores)
 
-cuidados_only3 <- cbind(cuidados_only2, fac_ml2$scores)
+head(proc_encuesta)
 
-head(cuidados_only3)
+#----5. AJUSTES PARA ANALISIS BIVARIADO ----
 
+proc_encuesta <- rename(proc_encuesta, "i_inflexible"= ML1) 
+
+proc_encuesta <- rename(proc_encuesta, 'i_flexible'=ML2)
+
+proc_encuesta$i_flexible<- set_label(x = proc_encuesta$i_flexible, label = 'Indice Trabajo de Cuidados Flexible')
+
+proc_encuesta$i_inflexible<- set_label(x = proc_encuesta$i_inflexible, label = 'Indice Trabajo de Cuidados Inflexible')
+
+frq(proc_encuesta$i_flexible)
+frq(proc_encuesta$i_inflexible)
+
+#----6. ANALISIS BIVARIADO ----
+
+# Matriz de correlación satisfaccion_vida # BAJA CORRELACION -0.13, 55 casos
+
+# A
+
+prueba1<- proc_encuesta %>% select(i_flexible, satisfaccion_vida)
+
+prueba1 <- drop_na(prueba1)
+
+cor_1 <- cor(prueba1)
+
+graph8 <- ggplot(prueba1, aes(x=satisfaccion_vida, y=i_flexible)) + 
+  geom_point(colour = 'pink', size = 4)
+
+graph8 <- graph8 + annotate("text", x = 2, y = 5, label = "r = - 0.14")
+
+graph8 <- graph8 + ggtitle("Tareas de cuidado flexibles y satisfaccion con la vida") + 
+  xlab('Satisfacción con la vida') + ylab ('Puntaje factorial tareas de cuidado flexibles')
+
+ggsave('output/graph8.png', plot = graph8)
+
+# B -0,13
+
+prueba1.2<- proc_encuesta %>% select(i_inflexible, satisfaccion_vida)
+
+prueba1.2 <- drop_na(prueba1.2)
+
+cor_1.2 <- cor(prueba1.2)
+
+graph9 <- ggplot(prueba1.2, aes(x=satisfaccion_vida, y=i_inflexible)) + 
+  geom_point(colour = 'blue', size = 4)
+
+graph9 <- graph9 + annotate("text", x = 2, y = 5, label = "r = - 0.13")
+
+graph9 <- graph9 + ggtitle("Tareas de cuidado inflexibles y satisfaccion con la vida") + 
+  xlab('Satisfacción con la vida') + ylab ('Puntaje factorial tareas de cuidado inflexibles')
+
+ggsave('output/graph9.png', plot = graph9)
+
+# Matriz de correlación miembros_hogar # BAJA CORRELACION -0.109, 55 casos CASO INTERESANTE IWAL
+
+# A
+
+prueba2 <- proc_encuesta %>% select(i_inflexible, miembros_hogar)
+
+prueba2 <- drop_na(prueba2)
+
+cor_2 <- cor(prueba2)
+
+graph10 <- ggplot(prueba2, aes(x=miembros_hogar, y=i_inflexible)) + 
+  geom_point(colour = 'blue', size = 4)
+
+graph10 <- graph10 + annotate("text", x = 2, y = 5, label = "r = - 0.109")
+
+graph10 <- graph10 + ggtitle("Tareas de cuidado inflexibles y numero de miembros del hogar") + 
+  xlab('Numero de miembros del hogar') + ylab ('Puntaje factorial tareas de cuidado inflexibles')
+
+ggsave('output/graph10.png', plot = graph10)
+
+# B
+
+prueba2.5 <- proc_encuesta %>% select(i_flexible, miembros_hogar)
+
+prueba2.5 <- drop_na(prueba2.5)
+
+cor_2.5 <- cor(prueba2.5)
+
+graph11 <- ggplot(prueba2.5, aes(x=miembros_hogar, y=i_flexible)) + 
+  geom_point(colour = 'pink', size = 4)
+
+graph11 <- graph11 + annotate("text", x = 2, y = 5, label = "r = - 0.19")
+
+graph11 <- graph11 + ggtitle("Tareas de cuidado flexibles y numero de miembros del hogar") + 
+  xlab('Numero de miembros del hogar') + ylab ('Puntaje factorial tareas de cuidado flexibles')
+
+ggsave('output/graph11.png', plot = graph11)
+
+
+# Matriz de correlación cantidad_hijos # ALTA CORRELACION PERO MUY POCOS CASOS (2)
+
+prueba3 <- proc_encuesta %>% select(i_inflexible, i_flexible, cantidad_hijos)
+
+prueba3 <- drop_na(prueba3)
+
+cor_3 <- cor(prueba3)
+
+# Matriz correlacion edad #BAJA CORRELACION -0.095 y 0.069 para 54 casos
+
+prueba4 <- proc_encuesta %>% select(i_inflexible, i_flexible, edad)
+
+prueba4 <- drop_na(prueba4)
+
+cor_4 <- cor(prueba4)
+
+# Matriz correlacion tiempo_estudio # BAJA CORRELACION -0.16 Y 0.091 para 52 casos
+
+prueba5 <- proc_encuesta %>% select(i_inflexible, i_flexible, Tiempo_estudio) 
+
+prueba5 <- drop_na(prueba5)
+
+cor_5 <- cor(prueba5)
+
+# miembros_cuidado # CORRELACION MEDIA CON INFLEXIBLE BAJA CON FLEXIBLE 53 CASOS
+
+prueba6 <- proc_encuesta %>% select(i_inflexible, i_flexible, miembros_cuidado) 
+
+prueba6 <- drop_na(prueba6)
+
+cor_6 <- cor(prueba6)
+
+graph7 <- ggplot(prueba6, 
+       aes(x = as.factor(miembros_cuidado), 
+           y = i_inflexible)) +
+  geom_boxplot(fill="orange", alpha=0.2) +
+  scale_x_discrete(labels=c('No', 'Sí')) +
+  labs(title = "Poseer o no un integrante familiar con enfermedad que requiera cuidados y trabajo de cuidados inflexible", 
+       x = 'Poseer integrante a quien cuidar', y = 'Indice trabajo de cuidado inflexible') 
+
+ggsave('output/graph7.png', plot = graph7)
+
+# hijos
+
+prueba7 <- proc_encuesta %>% select(i_inflexible, i_flexible, hijos) 
+
+prueba7 <- drop_na(prueba7)
+
+graph8 <- ggplot(prueba7, 
+                 aes(x = as.factor(hijos), 
+                     y = i_inflexible)) +
+  geom_boxplot(fill="pink", alpha=0.2) +
+  scale_x_discrete(labels=c('No', 'Sí')) +
+  labs(title = "Tener hijos y trabajo de cuidados inflexible", 
+       x = 'Tener', y = 'Indice trabajo de cuidado inflexible') 
+
+ggsave('output/graph7.png', plot = graph8)
 
 
 
