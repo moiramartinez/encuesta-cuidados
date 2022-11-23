@@ -6,7 +6,10 @@
 
 library(sjPlot)
 library(ggplot2)
-library(haven)
+library(dplyr)
+library(RColorBrewer)
+library(sjlabelled)
+
 
 load('proc/encuesta_cuidados.RData') # El nombre de la base es proc_encuesta
 
@@ -70,6 +73,8 @@ save_plot('output/graph1.png', graph1, width = 35,
 
 # Si/No
 
+sino_only <- proc_encuesta %>% select(si_no_cuidado)
+
 sino_only <-na.omit(sino_only)
 
 graph2 <- ggplot(sino_only, aes(x = as_factor(si_no_cuidado))) +
@@ -79,5 +84,27 @@ graph2 <- ggplot(sino_only, aes(x = as_factor(si_no_cuidado))) +
 graph2 <- graph2 + ggtitle("Tareas de cuidado la última semana") +
   xlab("Respuesta")
 
+ggsave("output/graph2.png", plot = graph2)
+
+# cuidado_multiple_1
+
+cm1_only <- proc_encuesta %>% select(cuidado_multiple_1)
+
+cm1_only <- na.omit(cm1_only)
+
+cm1_only<-sjlabelled::copy_labels(cm1_only,proc_encuesta)
+
+get_labels(cm1_only$cuidado_multiple_1)
+
+coul <- brewer.pal(3, "Set2")
+
+graph3 <- ggplot(cm1_only, aes(x = as_factor(cuidado_multiple_1))) +
+  geom_bar(fill=coul) + 
+  scale_x_discrete(labels=c('Dar de comer o amamantar', 'Acostar', 'Aconsejar'))
+
+graph3 <- graph3 + ggtitle("Tarea de cuidado que toma más tiempo") + 
+  xlab('Respuesta')
+
+ggsave("output/graph3.png", plot = graph3)
 
 
