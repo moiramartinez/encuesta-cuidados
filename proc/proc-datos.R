@@ -90,7 +90,7 @@ proc_encuesta <- rename(proc_encuesta, "si_no_cuidado"= pregunta1) #Cambiar nomb
 
 get_label(proc_encuesta$si_no_cuidado) # La variable no tiene etiqueta, se le pondrá una.
 
-proc_encuesta$si_no_cuidado <- set_label(x = proc_encuesta$si_no_cuidado, label = 'Tareas de cuidado última semana')
+proc_encuesta$si_no_cuidado <- set_label(x = proc_encuesta$si_no_cuidado, label = 'Tareas de cuidado ultima semana')
 
 
 proc_encuesta$si_no_cuidado <- set_labels(proc_encuesta$si_no_cuidado,
@@ -104,7 +104,7 @@ frq(proc_encuesta$cuidado_tiempo)
 
 get_label(proc_encuesta$cuidado_tiempo)
 
-proc_encuesta$cuidado_tiempo <- set_label(x =proc_encuesta$cuidado_tiempo, label = 'Horas al día trabajo de cuidados')
+proc_encuesta$cuidado_tiempo <- set_label(x =proc_encuesta$cuidado_tiempo, label = 'Horas al dia trabajo de cuidados')
 
 proc_encuesta$cuidado_tiempo <- set_labels(proc_encuesta$cuidado_tiempo, 
                                            labels= c('Menos de 1 hr.'=1,
@@ -151,7 +151,7 @@ frq(proc_encuesta$cuidado_3)
 
 proc_encuesta <- rename(proc_encuesta, "cuidado_mudar" = cuidado_3)
 
-proc_encuesta$cuidado_mudar <- set_label(x = proc_encuesta$cuidado_mudar,label = "Frecuencia mudar o llevar al baño")
+proc_encuesta$cuidado_mudar <- set_label(x = proc_encuesta$cuidado_mudar,label = "Frecuencia mudar o llevar al bano")
 
 proc_encuesta$cuidado_mudar <- set_labels(proc_encuesta$cuidado_mudar,
                                             labels= c('Nunca' = 1,
@@ -167,7 +167,7 @@ frq(proc_encuesta$cuidado_4)
 
 proc_encuesta <- rename(proc_encuesta, "cuidado_asear" = cuidado_4)
 
-proc_encuesta$cuidado_asear <- set_label(x = proc_encuesta$cuidado_asear,label = "Frecuencia bañar o asear")
+proc_encuesta$cuidado_asear <- set_label(x = proc_encuesta$cuidado_asear,label = "Frecuencia banar o asear")
 
 proc_encuesta$cuidado_asear <- set_labels(proc_encuesta$cuidado_asear,
                                           labels= c('Nunca' = 1,
@@ -217,7 +217,7 @@ frq(proc_encuesta$cuidado_7)
 
 proc_encuesta <- rename(proc_encuesta, "cuidado_salud" = cuidado_7)
 
-proc_encuesta$cuidado_salud <- set_label(x = proc_encuesta$cuidado_salud,label = "Frecuencia dar medicamentos, algún tratamiento de salud o cuidar por alguna enfermedad")
+proc_encuesta$cuidado_salud <- set_label(x = proc_encuesta$cuidado_salud,label = "Frecuencia dar medicamentos, algun tratamiento de salud o cuidar por alguna enfermedad")
 
 proc_encuesta$cuidado_salud <- set_labels(proc_encuesta$cuidado_salud,
                                               labels= c('Nunca' = 1,
@@ -233,7 +233,7 @@ frq(proc_encuesta$cuidado_8)
 
 proc_encuesta <- rename(proc_encuesta, "cuidado_acompanar1" = cuidado_8)
 
-proc_encuesta$cuidado_acompanar1 <- set_label(x = proc_encuesta$cuidado_acompanar1,label = "Frecuencia acompañar o llevar a algún centro de salud")
+proc_encuesta$cuidado_acompanar1 <- set_label(x = proc_encuesta$cuidado_acompanar1,label = "Frecuencia acompanar o llevar a algun centro de salud")
 
 proc_encuesta$cuidado_acompanar1 <- set_labels(proc_encuesta$cuidado_acompanar1,
                                           labels= c('Nunca' = 1,
@@ -249,7 +249,7 @@ frq(proc_encuesta$cuidado_9)
 
 proc_encuesta <- rename(proc_encuesta, "cuidado_acompanar2" = cuidado_9)
 
-proc_encuesta$cuidado_acompanar2 <- set_label(x = proc_encuesta$cuidado_acompanar2,label = "Frecuencia acompañar o llevar a algún centro educacional")
+proc_encuesta$cuidado_acompanar2 <- set_label(x = proc_encuesta$cuidado_acompanar2,label = "Frecuencia acompanar o llevar a algun centro educacional")
 
 proc_encuesta$cuidado_acompanar2 <- set_labels(proc_encuesta$cuidado_acompanar2,
                                                labels= c('Nunca' = 1,
@@ -319,7 +319,7 @@ proc_encuesta <- cSplit(proc_encuesta,"cuidado_multiple",",") #Se transforman la
 
 frq(proc_encuesta$cuidado_multiple_1)
 
-proc_encuesta$cuidado_multiple_1 <- set_label(x = proc_encuesta$cuidado_multiple_1,label = "Tarea de cuidado que toma más tiempo")
+proc_encuesta$cuidado_multiple_1 <- set_label(x = proc_encuesta$cuidado_multiple_1,label = "Tarea de cuidado que toma mas tiempo")
 
 proc_encuesta$cuidado_multiple_1 <- set_labels(proc_encuesta$cuidado_multiple_1,
                                          labels= c('Dar de comer o amamantar' = 1,
@@ -331,7 +331,7 @@ frq(proc_encuesta$cuidado_multiple_1)
 
 frq(proc_encuesta$cuidado_multiple_2)
 
-proc_encuesta$cuidado_multiple_2 <- set_label(x = proc_encuesta$cuidado_multiple_2,label = "Segunda tarea de cuidado que toma más tiempo")
+proc_encuesta$cuidado_multiple_2 <- set_label(x = proc_encuesta$cuidado_multiple_2,label = "Segunda tarea de cuidado que toma mas tiempo")
 
 proc_encuesta$cuidado_multiple_2 <- set_labels(proc_encuesta$cuidado_multiple_2,
                                                labels= c('Acostar' = 2,
@@ -345,7 +345,7 @@ frq(proc_encuesta$cuidado_multiple_2)
 
 frq(proc_encuesta$cuidado_multiple_3)
 
-proc_encuesta$cuidado_multiple_3 <- set_label(x = proc_encuesta$cuidado_multiple_3,label = "Tercera tarea de cuidado que toma más tiempo")
+proc_encuesta$cuidado_multiple_3 <- set_label(x = proc_encuesta$cuidado_multiple_3,label = "Tercera tarea de cuidado que toma mas tiempo")
 
 proc_encuesta$cuidado_multiple_3 <- set_labels(proc_encuesta$cuidado_multiple_3,
                                                labels= c('Acompañar o llevar a algún centro de salud' = 8,
@@ -359,7 +359,7 @@ frq(proc_encuesta$cuidado_multiple_3)
 frq(proc_encuesta$satisfaccion_vida)
 
 proc_encuesta$satisfaccion_vida <- set_label(x = proc_encuesta$satisfaccion_vida, 
-                                             label = "Satisfacción con la vida (1 a 10)")
+                                             label = "Satisfaccion con la vida (1 a 10)")
 
 proc_encuesta$satisfaccion_vida <- set_labels(proc_encuesta$satisfaccion_vida,
                                               labels = c('Extremadamente insatisfecho' = 1,
@@ -374,7 +374,7 @@ frq(proc_encuesta$familia_1)
 proc_encuesta <- rename(proc_encuesta, "miembros_hogar" = familia_1)
 
 proc_encuesta$miembros_hogar <- set_label(x = proc_encuesta$miembros_hogar, 
-                                             label = "Número de miembros en el hogar")
+                                             label = "Numero de miembros en el hogar")
 
 frq(proc_encuesta$miembros_hogar)
 
@@ -419,7 +419,7 @@ frq(proc_encuesta$familia_3b)
 proc_encuesta <- rename(proc_encuesta, "cantidad_hijos" = familia_3b)
 
 proc_encuesta$cantidad_hijos <- set_label(x = proc_encuesta$cantidad_hijos, 
-                                 label = "Número de hijos")
+                                 label = "Numero de hijos")
 
 frq(proc_encuesta$cantidad_hijos)
 
@@ -491,7 +491,7 @@ proc_encuesta <- rename(proc_encuesta, "ano_ingreso" = anho_curs)
 proc_encuesta$ano_ingreso <- na_if(proc_encuesta$ano_ingreso, 3)
 
 proc_encuesta$ano_ingreso <- set_label(x = proc_encuesta$ano_ingreso, 
-                                   label = "Año ingreso carrera")
+                                   label = "Ano ingreso carrera")
 
 frq(proc_encuesta$ano_ingreso)
 
@@ -500,7 +500,7 @@ frq(proc_encuesta$ano_ingreso)
 frq(proc_encuesta$id_genero)
 
 proc_encuesta$id_genero <- set_label(x = proc_encuesta$id_genero,
-                                     label= "Identidad de género")
+                                     label= "Identidad de genero")
 
 proc_encuesta$id_genero <- set_labels(proc_encuesta$id_genero,
                                       labels = c('Mujer cis' = 1,
@@ -518,7 +518,7 @@ frq(proc_encuesta$id_genero_otra)
 proc_encuesta[proc_encuesta=="thank the formr monkey"] <- NA
 
 proc_encuesta$id_genero_otra <- set_label(x = proc_encuesta$id_genero_otra,
-                                     label= "Si respondió otra, ¿Cuál es su identidad de género?")
+                                     label= "Si respondio otra, ¿Cual es su identidad de genero?")
 
 frq(proc_encuesta$id_genero_otra)
 
@@ -544,7 +544,7 @@ frq(proc_encuesta$sex_asignado)
 frq(proc_encuesta$Tiempo_estudio)
 
 proc_encuesta$Tiempo_estudio <- set_label(x = proc_encuesta$Tiempo_estudio,
-                                        label= 'Horas al día dedicadas a las asignaturas cursadas')
+                                        label= 'Horas al dia dedicadas a las asignaturas cursadas')
 
 frq(proc_encuesta$Tiempo_estudio)
 
@@ -553,7 +553,7 @@ frq(proc_encuesta$Tiempo_estudio)
 frq(proc_encuesta$Tiempo_estudio2)
 
 proc_encuesta$Tiempo_estudio2 <- set_label(x = proc_encuesta$Tiempo_estudio2,
-                                           label= 'Horas al día dedicadas a actividades de estudio adicionales al plan de estudio')
+                                           label= 'Horas al dia dedicadas a actividades de estudio adicionales al plan de estudio')
 
 frq(proc_encuesta$Tiempo_estudio2)
 

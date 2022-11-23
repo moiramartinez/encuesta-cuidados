@@ -9,7 +9,9 @@ library(ggplot2)
 library(dplyr)
 library(RColorBrewer)
 library(sjlabelled)
-
+library(sjmisc)
+library(kableExtra)
+library(webshot)
 
 load('proc/encuesta_cuidados.RData') # El nombre de la base es proc_encuesta
 
@@ -56,6 +58,14 @@ names(proc_encuesta)
 
 # Crear sub-base de datos que contenga solo las variables de cuidado
 
+sum(is.na(proc_encuesta$cuidado_acompanar1)) #116 casos perdidos
+
+sum(is.na(proc_encuesta$cuidados_acompanar2))
+
+sum(is.na(proc_encuesta$cuidado_aconsejar))
+
+sum(is.na(proc_encuesta$cuidado_acostar))
+
 cuidados_only <- proc_encuesta %>% select(cuidado_acompanar1, cuidado_acompanar2, cuidado_aconsejar, 
                                           cuidado_acostar, cuidado_asear, cuidado_comer, cuidado_jugar,
                                           cuidado_mudar, cuidado_leer, cuidado_salud, cuidado_tareas, cuidado_vestir)
@@ -73,12 +83,15 @@ save_plot('output/graph1.png', graph1, width = 35,
 
 # Si/No
 
+sum(is.na(proc_encuesta$si_no_cuidado)) #141 casos perdidos
+
 sino_only <- proc_encuesta %>% select(si_no_cuidado)
 
 sino_only <-na.omit(sino_only)
 
+
 graph2 <- ggplot(sino_only, aes(x = as_factor(si_no_cuidado))) +
-  geom_bar(fill='#FFCC99') + 
+  geom_bar(fill='#FBBDEE') + 
   scale_x_discrete(labels=c('No', 'Sí'))
 
 graph2 <- graph2 + ggtitle("Tareas de cuidado la última semana") +
@@ -87,6 +100,8 @@ graph2 <- graph2 + ggtitle("Tareas de cuidado la última semana") +
 ggsave("output/graph2.png", plot = graph2)
 
 # cuidado_multiple_1
+
+sum(is.na(proc_encuesta$cuidado_multiple_1)) # 174 casos perdidos
 
 cm1_only <- proc_encuesta %>% select(cuidado_multiple_1)
 
@@ -106,5 +121,34 @@ graph3 <- graph3 + ggtitle("Tarea de cuidado que toma más tiempo") +
   xlab('Respuesta')
 
 ggsave("output/graph3.png", plot = graph3)
+
+# Tabla general
+
+names(proc_encuesta)
+
+proc_encuesta %>% descr(si_no_cuidado, cuidado_tiempo, cuidado_comer, cuidado_acostar, cuidado_mudar, cuidado_asear, cuidado_vestir, cuidado_aconsejar,
+                        cuidado_salud, cuidado_acompanar1, cuidado_acompanar2, cuidado_tareas, cuidado_jugar, cuidado_leer, cuidado_multiple_1,
+                        cuidado_multiple_2, cuidado_multiple_3, show = c("label","range", "mean", "sd", "NA.prc", "n"), out = 'browser', file = 'output/tab1.html')
+
+webshot("output/tab1.html","output/tab1.png")
+
+# Horas
+sum(is.na(proc_encuesta$cuidado_tiempo)) # 174 casos perdidos
+
+tiempo_only <- proc_encuesta %>% select(cuidado_tiempo)
+
+tiempo_only <- na.omit(tiempo_only)
+
+get_labels(proc_encuesta$cuidado_tiempo)
+
+coul2 <- brewer.pal(3, 'Pastel1')
+
+graph4 <- ggplot(tiempo_only, aes(x = as_factor(cuidado_tiempo))) +
+  geom_bar(fill=coul2) + 
+  scale_x_discrete(labels=c('Menos de 1 hr.', '1-3 hrs.', '3-5 hrs.'))
+
+graph4<- graph4 + ggtitle('Cantidad de horas dedicadas al trabajo de cuidado') + xlab('Respuesta')
+
+ggsave('output/graph4.png', plot = graph4)
 
 
