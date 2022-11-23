@@ -32,6 +32,11 @@ genero <- read.csv("input/grupo4.csv")
 
 stargazer(genero, type="text")
 
+# Base de datos uso del tiempo
+
+tiempo <- read.csv("input/grupo6.csv")
+
+
 #----2. SELECCIÓN DE VARIABLES Y UNION DE BASES DE DATOS  ----
 
 # Comprobar nombres de las variables en cada base de datos.
@@ -39,6 +44,7 @@ stargazer(genero, type="text")
 names(carac)
 names(cuidados)
 names(genero)
+names(tiempo)
 
 # Se deja fueran fuera las variables que no aportan al análisis o no son relevantes en esta oportunidad.
 
@@ -46,7 +52,7 @@ names(genero)
 
 
 proc_carac <- carac %>% select(session, satisfaccion_vida, familia_1, familia_2, familia_3, familia_3b, familia_4, 
-                               e_civil, edad, carrera, anho_curs, educ_padre, educ_madre) 
+                               e_civil, edad, carrera, anho_curs, residencia) 
 
 # Selección de variables de interés cuidados
 
@@ -58,11 +64,17 @@ proc_cuidados <- cuidados %>% select(session, pregunta1, cuidado_tiempo, cuidado
 
 proc_genero <- genero %>% select (session, id_genero, id_genero_otra, sex_asignado)
 
-# Unión de ambas bases
+# Selección variables de interés uso del tiempo
+
+proc_tiempo <- tiempo %>% select (session, Tiempo_estudio, Tiempo_estudio2)
+
+# Unión de las bases
 
 proc_encuesta <- merge(proc_cuidados, proc_carac, by='session')
 
 proc_encuesta <- merge(proc_encuesta, proc_genero, by='session')
+
+proc_encuesta <- merge(proc_encuesta, proc_tiempo, by = 'session')
 
 
 #----3. PROCESAMIENTO DE VARIABLES----
@@ -483,38 +495,6 @@ proc_encuesta$ano_ingreso <- set_label(x = proc_encuesta$ano_ingreso,
 
 frq(proc_encuesta$ano_ingreso)
 
-#---- 3.27 educ_padre ----
-
-frq(proc_encuesta$educ_padre)
-
-proc_encuesta$educ_padre <- set_label(x = proc_encuesta$educ_padre, 
-                                      label = "Nivel educacional padre")
-
-proc_encuesta$educ_padre <- set_labels(proc_encuesta$educ_padre,
-                                    labels = c('Ed. Basica'=1,
-                                               'Ed. Media'=2,
-                                               'Ed. Tecnica' =3,
-                                               'Ed. Universitaria'= 4,
-                                               'Postgrado' = 5))
-
-frq(proc_encuesta$educ_padre)
-
-#---- 3.28 educ_madre ----
-
-frq(proc_encuesta$educ_madre)
-
-proc_encuesta$educ_madre <- set_label(x = proc_encuesta$educ_madre, 
-                                      label = "Nivel educacional madre")
-
-proc_encuesta$educ_madre <- set_labels(proc_encuesta$educ_madre,
-                                       labels = c('Ed. Basica'=1,
-                                                  'Ed. Media'=2,
-                                                  'Ed. Tecnica' =3,
-                                                  'Ed. Universitaria'= 4,
-                                                  'Postgrado' = 5))
-
-frq(proc_encuesta$educ_madre)
-
 #---- 3.29 id_genero ----
 
 frq(proc_encuesta$id_genero)
@@ -542,7 +522,7 @@ proc_encuesta$id_genero_otra <- set_label(x = proc_encuesta$id_genero_otra,
 
 frq(proc_encuesta$id_genero_otra)
 
-#---- 3.31 
+#---- 3.31 sex_asignado ----
 
 frq(proc_encuesta$sex_asignado)
 
@@ -558,6 +538,24 @@ proc_encuesta$sex_asignado <- set_label(x = proc_encuesta$sex_asignado,
                                         label= 'Sexo asignado')
 
 frq(proc_encuesta$sex_asignado)
+
+#---- 3.32 tiempo_estudio ----
+
+frq(proc_encuesta$Tiempo_estudio)
+
+proc_encuesta$Tiempo_estudio <- set_label(x = proc_encuesta$Tiempo_estudio,
+                                        label= 'Horas al día dedicadas a las asignaturas cursadas')
+
+frq(proc_encuesta$Tiempo_estudio)
+
+#---- 3.33 tiempo_estudio2 ----
+
+frq(proc_encuesta$Tiempo_estudio2)
+
+proc_encuesta$Tiempo_estudio2 <- set_label(x = proc_encuesta$Tiempo_estudio2,
+                                           label= 'Horas al día dedicadas a actividades de estudio adicionales al plan de estudio')
+
+frq(proc_encuesta$Tiempo_estudio2)
 
 
 #---- 4. CASOS PERDIDOS ----
@@ -575,4 +573,4 @@ stargazer(proc_encuesta, type="text")
 
 # Guardar
 
-save(proc_encuesta, "proc/encuesta_cuidados.RData")
+save(proc_encuesta, file = 'proc/encuesta_cuidados.RData')
