@@ -12,6 +12,9 @@ library(sjlabelled)
 library(sjmisc)
 library(kableExtra)
 library(webshot)
+library(corrplot)
+library(psy)
+library(psych)
 
 load('proc/encuesta_cuidados.RData') # El nombre de la base es proc_encuesta
 
@@ -150,5 +153,55 @@ graph4 <- ggplot(tiempo_only, aes(x = as_factor(cuidado_tiempo))) +
 graph4<- graph4 + ggtitle('Cantidad de horas dedicadas al trabajo de cuidado') + xlab('Respuesta')
 
 ggsave('output/graph4.png', plot = graph4)
+
+#----3. MATRIZ DE CORRELACIONES ----
+
+cuidados_only <- sjlabelled::copy_labels(cuidados_only,proc_encuesta)
+
+options(digits=2)
+
+corMat  <- cor(cuidados_only) 
+
+tab_corr(cuidados_only, triangle = "lower",  file = 'output/tab2.html')
+
+webshot('output/tab2.html', 'output/tab2.png')
+
+png("output/graph5.png", height=1800, width=1800, type = 'cairo')
+
+graph5 <- corrplot(corMat, type="lower",
+                   order="AOE", cl.pos="b", tl.pos="d")
+dev.off()
+
+#---- 4. ANÁLISIS FACTORIAL ----
+
+scree.plot(cuidados_only) # Se ven claramente 3 factores
+
+fac_ml <- fa(r = cuidados_only, nfactors = 2, fm= "ml")
+
+summary(fac_ml)
+
+png("output/graph6.png", height=700, width=900, type = 'cairo')
+
+factor.plot(fac_ml, labels=rownames(fac_ml$loadings)) 
+
+dev.off()
+
+tab_fa(cuidados_only, rotation = "varimax",show.comm = TRUE,  nmbr.fctr = 2, title = "Analisis factorial tareas de cuidado", 
+       file = 'output/tab3.html')
+
+webshot('output/tab3.html', 'output/tab3.png')
+
+# Puntajes factoriales
+
+fac_ml2 <- fa(r = cuidados_only, nfactors = 2, fm= "ml", scores="regression")
+
+cuidados_only2=cuidados_only
+
+cuidados_only3 <- cbind(cuidados_only2, fac_ml2$scores)
+
+head(cuidados_only3)
+
+
+
 
 
