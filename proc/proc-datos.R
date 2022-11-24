@@ -2,7 +2,7 @@
 # Moira Martínez, Catalina Navia y Ambar Santander
 # Curso Encuestas Sociales, Noviembre 2022
 
-options(scipen=999) 
+options(scipen=999)
 
 #----1. LIBRERÍAS Y BASE DE DATOS ----
 
@@ -18,11 +18,15 @@ library(tidyr)
 
 carac <- read.csv("input/caracterizacion.csv")
 
+dim(carac) # 112 casos con 24 variables
+
 stargazer(carac, type = "text")
 
 # Base de datos trabajo de cuidados
 
 cuidados <- read.csv("input/grupo2.csv")
+
+dim(cuidados) # 219 casos con 20 variables
 
 stargazer(cuidados, type="text")
 
@@ -30,12 +34,9 @@ stargazer(cuidados, type="text")
 
 genero <- read.csv("input/grupo4.csv")
 
+dim(genero) # 258 casos con 35 variables
+
 stargazer(genero, type="text")
-
-# Base de datos uso del tiempo
-
-tiempo <- read.csv("input/grupo6.csv")
-
 
 #----2. SELECCIÓN DE VARIABLES Y UNION DE BASES DE DATOS  ----
 
@@ -44,7 +45,6 @@ tiempo <- read.csv("input/grupo6.csv")
 names(carac)
 names(cuidados)
 names(genero)
-names(tiempo)
 
 # Se deja fueran fuera las variables que no aportan al análisis o no son relevantes en esta oportunidad.
 
@@ -64,17 +64,12 @@ proc_cuidados <- cuidados %>% select(session, pregunta1, cuidado_tiempo, cuidado
 
 proc_genero <- genero %>% select (session, id_genero, id_genero_otra, sex_asignado)
 
-# Selección variables de interés uso del tiempo
-
-proc_tiempo <- tiempo %>% select (session, Tiempo_estudio, Tiempo_estudio2)
 
 # Unión de las bases
 
 proc_encuesta <- merge(proc_cuidados, proc_carac, by='session')
 
 proc_encuesta <- merge(proc_encuesta, proc_genero, by='session')
-
-proc_encuesta <- merge(proc_encuesta, proc_tiempo, by = 'session')
 
 
 #----3. PROCESAMIENTO DE VARIABLES----
@@ -110,8 +105,10 @@ proc_encuesta$cuidado_tiempo <- set_labels(proc_encuesta$cuidado_tiempo,
                                            labels= c('Menos de 1 hr.'=1,
                                                      '1-3 hrs.'=2,
                                                      '3-5 hrs.'=3))
-frq(proc_encuesta$cuidado_tiempo)
 
+proc_encuesta$cuidado_tiempo <- na_if(proc_encuesta$cuidado_tiempo, 6)
+
+frq(proc_encuesta$cuidado_tiempo)
 
 #---- 3.2 cuidado_1 ----
 
@@ -324,7 +321,9 @@ proc_encuesta$cuidado_multiple_1 <- set_label(x = proc_encuesta$cuidado_multiple
 proc_encuesta$cuidado_multiple_1 <- set_labels(proc_encuesta$cuidado_multiple_1,
                                          labels= c('Dar de comer o amamantar' = 1,
                                                    'Acostar' = 2,
-                                                   'Aconsejar' = 6))
+                                                   'Aconsejar' = 6,
+                                                   'Vestir o arreglar' = 5, 
+                                                   'Ayudar con tareas escolares' = 10))
 frq(proc_encuesta$cuidado_multiple_1)
 
 #---- 3.15 cuidado_multiple_2 ----
@@ -337,7 +336,9 @@ proc_encuesta$cuidado_multiple_2 <- set_labels(proc_encuesta$cuidado_multiple_2,
                                                labels= c('Acostar' = 2,
                                                          'Mudar o llevar al baño' = 3,
                                                          'Vestir o arreglar' = 5, 
-                                                         'Aconsejar' = 6))
+                                                         'Aconsejar' = 6, 
+                                                         'Ayudar con tareas escolares' = 10, 
+                                                         'Jugar' = 11))
 
 frq(proc_encuesta$cuidado_multiple_2)
 
@@ -377,23 +378,6 @@ proc_encuesta$miembros_hogar <- set_label(x = proc_encuesta$miembros_hogar,
                                              label = "Numero de miembros en el hogar")
 
 frq(proc_encuesta$miembros_hogar)
-
-#---- 3.19 familia_2 ----
-
-frq(proc_encuesta$familia_2)
-
-proc_encuesta <- rename(proc_encuesta, "miembros_cuidado" = familia_2)
-
-proc_encuesta$miembros_cuidado <- car::recode(proc_encuesta$miembros_cuidado, "c(1) = 1; c(2) = 0" )
-
-proc_encuesta$miembros_cuidado <- set_labels(proc_encuesta$miembros_cuidado,
-                                          labels = c('No'=0,
-                                                     'Sí'=1))
-
-proc_encuesta$miembros_cuidado <- set_label(x = proc_encuesta$miembros_cuidado, 
-                                          label = "Miembro del hogar requiere cuidados")
-
-frq(proc_encuesta$miembros_cuidado)
 
 #----3.20 familia_3 ----
 
@@ -482,19 +466,6 @@ proc_encuesta$carrera <- set_labels(proc_encuesta$carrera,
 
 frq(proc_encuesta$carrera)
 
-#---- 3.26 anho_curs ----
-
-frq(proc_encuesta$anho_curs)
-
-proc_encuesta <- rename(proc_encuesta, "ano_ingreso" = anho_curs)
-
-proc_encuesta$ano_ingreso <- na_if(proc_encuesta$ano_ingreso, 3)
-
-proc_encuesta$ano_ingreso <- set_label(x = proc_encuesta$ano_ingreso, 
-                                   label = "Ano ingreso carrera")
-
-frq(proc_encuesta$ano_ingreso)
-
 #---- 3.29 id_genero ----
 
 frq(proc_encuesta$id_genero)
@@ -510,59 +481,16 @@ proc_encuesta$id_genero <- set_labels(proc_encuesta$id_genero,
 
 frq(proc_encuesta$id_genero)
 
-
-#----3.30 id_genero_otra ----
-
-frq(proc_encuesta$id_genero_otra)
-
-proc_encuesta[proc_encuesta=="thank the formr monkey"] <- NA
-
-proc_encuesta$id_genero_otra <- set_label(x = proc_encuesta$id_genero_otra,
-                                     label= "Si respondio otra, ¿Cual es su identidad de genero?")
-
-frq(proc_encuesta$id_genero_otra)
-
-#---- 3.31 sex_asignado ----
-
-frq(proc_encuesta$sex_asignado)
-
-proc_encuesta$sex_asignado <- na_if(proc_encuesta$sex_asignado, 3)
-
-proc_encuesta$sex_asignado <- car::recode(proc_encuesta$sex_asignado, "c(1) = 0; c(2) = 1" )
-
-proc_encuesta$sex_asignado <- set_labels(proc_encuesta$sex_asignado,
-                                        labels = c('Hombre'=0,
-                                                   'Mujer'=1))
-
-proc_encuesta$sex_asignado <- set_label(x = proc_encuesta$sex_asignado,
-                                        label= 'Sexo asignado')
-
-frq(proc_encuesta$sex_asignado)
-
-#---- 3.32 tiempo_estudio ----
-
-frq(proc_encuesta$Tiempo_estudio)
-
-proc_encuesta$Tiempo_estudio <- set_label(x = proc_encuesta$Tiempo_estudio,
-                                        label= 'Horas al dia dedicadas a las asignaturas cursadas')
-
-frq(proc_encuesta$Tiempo_estudio)
-
-#---- 3.33 tiempo_estudio2 ----
-
-frq(proc_encuesta$Tiempo_estudio2)
-
-proc_encuesta$Tiempo_estudio2 <- set_label(x = proc_encuesta$Tiempo_estudio2,
-                                           label= 'Horas al dia dedicadas a actividades de estudio adicionales al plan de estudio')
-
-frq(proc_encuesta$Tiempo_estudio2)
-
-
 #---- 4. CASOS PERDIDOS ----
 
 # Se eliminarán los casos que no tienen un identificador de sesión ('session')
 
 proc_encuesta <- proc_encuesta[-which(proc_encuesta$session == ""), ]
+
+sum(duplicated(proc_encuesta$session))
+
+proc_encuesta <- distinct(proc_encuesta,session,.keep_all = TRUE)
+
 
 #---- 5. GENERACIÓN DE BASE DE DATOS PROCESADA -----
 
