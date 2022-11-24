@@ -491,6 +491,11 @@ sum(duplicated(proc_encuesta$session))
 
 proc_encuesta <- distinct(proc_encuesta,session,.keep_all = TRUE)
 
+proc_encuesta <-proc_encuesta[-23,]
+
+proc_encuesta <-proc_encuesta[-29,]
+
+proc_encuesta <-proc_encuesta[-77,]
 
 #---- 5. GENERACIÓN DE BASE DE DATOS PROCESADA -----
 
@@ -501,4 +506,4 @@ stargazer(proc_encuesta, type="text")
 
 # Guardar
 
-save(proc_encuesta, file = 'proc/encuesta_cuidados.RData')
+save(proc_encuesta, file = 'output/encuesta_cuidados.RData')
