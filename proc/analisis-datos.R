@@ -319,40 +319,72 @@ prueba5 <- drop_na(prueba5)
 
 cor_5 <- cor(prueba5)
 
-# miembros_cuidado # CORRELACION MEDIA CON INFLEXIBLE BAJA CON FLEXIBLE 53 CASOS
+# genero
 
-prueba6 <- proc_encuesta %>% select(i_inflexible, i_flexible, miembros_cuidado) 
+# A
+
+prueba6 <- proc_encuesta %>% select(i_inflexible, id_genero) 
 
 prueba6 <- drop_na(prueba6)
 
-cor_6 <- cor(prueba6)
+graph12 <- ggplot(prueba6, aes(x= as.factor(id_genero), y= i_inflexible)) +
+  geom_boxplot(fill = 'pink', alpha=0.7) +
+  stat_summary(fun.y=mean, geom="point", shape=20, size=6, color="#FF2F97", fill="#FF2F97") +
+  theme(legend.position="none") + scale_x_discrete(labels=c('Mujer cis', 'Hombre cis', 'No binarie', 'Otra'))
 
-graph7 <- ggplot(prueba6, 
-       aes(x = as.factor(miembros_cuidado), 
-           y = i_inflexible)) +
-  geom_boxplot(fill="orange", alpha=0.2) +
-  scale_x_discrete(labels=c('No', 'Sí')) +
-  labs(title = "Poseer o no un integrante familiar con enfermedad que requiera cuidados y trabajo de cuidados inflexible", 
-       x = 'Poseer integrante a quien cuidar', y = 'Indice trabajo de cuidado inflexible') 
+graph12 <- graph12 + ggtitle("Genero y tareas de cuidado inflexibles") +
+  xlab("Genero") + ylab('Puntaje factorial tareas de cuidado inflexibles')
 
-ggsave('output/graph7.png', plot = graph7)
+ggsave("output/graph12.png", plot = graph12)
 
-# hijos
+# B
 
-prueba7 <- proc_encuesta %>% select(i_inflexible, i_flexible, hijos) 
+prueba6.5 <- proc_encuesta %>% select(i_flexible, id_genero) 
+
+prueba6.5 <- drop_na(prueba6.5)
+
+graph13 <- ggplot(prueba6.5, aes(x= as.factor(id_genero), y= i_flexible)) +
+  geom_boxplot(fill = '#BAFFA0', alpha=0.7) +
+  stat_summary(fun.y=mean, geom="point", shape=20, size=6, color="green", fill="green") +
+  theme(legend.position="none") + scale_x_discrete(labels=c('Mujer cis', 'Hombre cis', 'No binarie', 'Otra'))
+
+graph13 <- graph13 + ggtitle("Genero y tareas de cuidado flexibles") +
+  xlab("Genero") + ylab('Puntaje factorial tareas de cuidado flexibles')
+
+ggsave("output/graph13.png", plot = graph13)
+
+# Carrera
+
+# A
+
+prueba7 <- proc_encuesta %>% select(i_flexible, carrera) 
 
 prueba7 <- drop_na(prueba7)
 
-graph8 <- ggplot(prueba7, 
-                 aes(x = as.factor(hijos), 
-                     y = i_inflexible)) +
-  geom_boxplot(fill="pink", alpha=0.2) +
-  scale_x_discrete(labels=c('No', 'Sí')) +
-  labs(title = "Tener hijos y trabajo de cuidados inflexible", 
-       x = 'Tener', y = 'Indice trabajo de cuidado inflexible') 
+graph14 <- ggplot(prueba7, aes(x= as.factor(carrera), y= i_flexible)) +
+  geom_boxplot(fill = '#BAFFA0', alpha=0.7) +
+  stat_summary(fun.y=mean, geom="point", shape=20, size=6, color="green", fill="green") +
+  theme(legend.position="none") + scale_x_discrete(labels=c('Antropologia', 'Ed. Parvularia', 'Psicologia', 'Sociologia', 'Trabajo Social'))
 
-ggsave('output/graph7.png', plot = graph8)
+graph14 <- graph14 + ggtitle("Carrera y tareas de cuidado flexibles") +
+  xlab("Carrera") + ylab('Puntaje factorial tareas de cuidado flexibles')
 
+ggsave("output/graph14.png", plot = graph14)
 
+#B
+
+prueba7.2 <- proc_encuesta %>% select(i_inflexible, carrera)
+
+prueba7.2 <- drop_na(prueba7.2)
+
+graph15 <- ggplot(prueba7.2, aes(x= as.factor(carrera), y= i_inflexible)) +
+  geom_boxplot(fill = 'pink', alpha=0.7) +
+  stat_summary(fun.y=mean, geom="point", shape=20, size=6, color="#FF2F97", fill="#FF2F97") +
+  theme(legend.position="none") + scale_x_discrete(labels=c('Antropologia', 'Ed. Parvularia', 'Psicologia', 'Sociologia', 'Trabajo Social'))
+
+graph15 <- graph15 + ggtitle("Carrera y tareas de cuidado inflexibles") +
+  xlab("Carrera") + ylab('Puntaje factorial tareas de cuidado inflexibles')
+
+ggsave("output/graph15.png", plot = graph15)
 
 
